@@ -7,16 +7,30 @@ function App() {
 
       <section
         id="institution-track"
-        className="h-screen bg-blue-200 flex items-center justify-center text-5xl font-bold"
+        className="h-screen bg-stone flex items-center justify-center"
       >
-        Institution Track
+        <div className="text-center">
+          <h2 className="text-5xl font-display text-ink mb-4">
+            Institution Track
+          </h2>
+          <p className="text-slate">
+            Placeholder for institution-specific sections
+          </p>
+        </div>
       </section>
 
       <section
         id="family-track"
-        className="h-screen bg-green-200 flex items-center justify-center text-5xl font-bold"
+        className="h-screen bg-parchment flex items-center justify-center"
       >
-        Family Track
+        <div className="text-center">
+          <h2 className="text-5xl font-display text-ink mb-4">
+            Family Track
+          </h2>
+          <p className="text-slate">
+            Placeholder for family-specific sections
+          </p>
+        </div>
       </section>
     </>
   );

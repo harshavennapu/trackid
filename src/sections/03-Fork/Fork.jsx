@@ -8,9 +8,8 @@ function Fork() {
 
     const section = document.getElementById(`${track}-track`);
 
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
+    if (section) ({
+       lenis.scrollTo(section);
       });
     }
   };
@@ -54,9 +53,15 @@ function Fork() {
             </h3>
 
             <p className="text-slate leading-relaxed">
-              Safety, visibility, and peace of mind for schools, campuses, and
-              organizations responsible for student wellbeing.
+              Safety, visibility, and peace of mind for schools, campuses,
+              and organizations responsible for student wellbeing.
             </p>
+
+            {activeTrack === "institution" && (
+              <span className="inline-block mt-6 text-sm font-medium text-accentDeep">
+                ✓ Selected
+              </span>
+            )}
           </div>
 
           {/* Family Card */}
@@ -82,6 +87,12 @@ function Fork() {
               A beautiful and secure way to stay connected with children,
               parents, and loved ones through everyday life.
             </p>
+
+            {activeTrack === "family" && (
+              <span className="inline-block mt-6 text-sm font-medium text-accentDeep">
+                ✓ Selected
+              </span>
+            )}
           </div>
         </div>
       </div>
