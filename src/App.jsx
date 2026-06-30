@@ -1,9 +1,16 @@
+import Reveal from "./sections/02-Reveal/Reveal";
 import Fork from "./sections/03-Fork/Fork";
 
 function App() {
   return (
     <>
+      {/* SECTION 02 */}
+      <Reveal />
+
+      {/* SECTION 03 */}
       <Fork />
+
+      {/* Institution Track */}
 
       <section
         id="institution-track"
@@ -30,6 +37,8 @@ function App() {
 
         </div>
       </section>
+
+      {/* Family Track */}
 
       <section
         id="family-track"
