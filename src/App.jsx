@@ -114,6 +114,20 @@ function App() {
           <p className="font-mono text-xs text-slate mt-6">
             ↑ ink · accent · gold · safe — all from tailwind.config.js tokens
           </p>
+
+          <h2 className="font-display text-6xl text-ink mb-6">
+            Safety at Scale
+          </h2>
+
+          <div className="divider-teardrop text-gold my-10">
+            <span className="bullet"></span>
+          </div>
+
+          <p className="text-slate text-xl leading-9">
+            Designed for schools, universities, and educational organizations
+            to provide visibility, safety, and peace of mind.
+          </p>
+
         </div>
 
       </div>
