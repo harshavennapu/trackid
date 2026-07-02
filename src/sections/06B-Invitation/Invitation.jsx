@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Heart,
   Gift,
+  HeartHandshake,
   Sparkles,
   ShieldCheck,
   ChevronRight,
@@ -10,20 +10,107 @@ import {
 
 import SectionWrapper from "../../components/SectionWrapper";
 import Divider from "../../components/Divider";
-
-// Reuse FormField from Section 06A
 import FormField from "../06A-InstitutionalAsk/FormField";
 
-import { COPY } from "../../content/copy";
-import { FAMILY_FORM_FIELDS } from "../../content/formSchema";
 import { submitLead } from "../../services/leadSubmission";
-
 import { fadeUp, staggerContainer } from "../../motion/variants";
 
-export default function Invitation() {
-  const copy = COPY.invitation;
+const INVITATION_COPY = {
+  eyebrow: "Family Invitation",
+  headline: "Shop the Collection",
+  subtitle:
+    "Join the waitlist for TrakID's family collection, designed as a keepsake children can wear with comfort, confidence, and a little everyday magic.",
+  errorRequired: "This field is required.",
+  submitLabel: "Join the Waitlist",
+  successTitle: "You're On The List",
+  successMessage:
+    "Thank you for joining the family waitlist. We'll share collection updates, launch timing, and gifting details as soon as they are ready.",
+};
 
-  const [formData, setFormData] = useState({});
+const INVITATION_FORM_FIELDS = [
+  {
+    name: "parentName",
+    label: "Your name",
+    type: "text",
+    placeholder: "Enter your name",
+    required: true,
+  },
+  {
+    name: "email",
+    label: "Email address",
+    type: "email",
+    placeholder: "Enter your email",
+    required: true,
+  },
+  {
+    name: "selectedDesign",
+    label: "Pendant design",
+    type: "select",
+    required: true,
+    options: [
+      {
+        value: "starlight",
+        label: "Starlight Pendant",
+      },
+      {
+        value: "moonbeam",
+        label: "Moonbeam Pendant",
+      },
+      {
+        value: "sunrise",
+        label: "Sunrise Pendant",
+      },
+      {
+        value: "heartline",
+        label: "Heartline Pendant",
+      },
+    ],
+  },
+  {
+    name: "giftIntent",
+    label: "Who is this for?",
+    type: "select",
+    required: true,
+    options: [
+      {
+        value: "my-child",
+        label: "My child",
+      },
+      {
+        value: "grandchild",
+        label: "My grandchild",
+      },
+      {
+        value: "family-gift",
+        label: "A family gift",
+      },
+      {
+        value: "still-deciding",
+        label: "Still deciding",
+      },
+    ],
+  },
+  {
+    name: "message",
+    label: "Anything you would like us to know?",
+    type: "textarea",
+    placeholder:
+      "Tell us about the child, the occasion, or the kind of keepsake you are hoping for.",
+    required: false,
+  },
+];
+
+export default function Invitation() {
+  const copy = INVITATION_COPY;
+
+  const [formData, setFormData] = useState({
+    parentName: "",
+    email: "",
+    selectedDesign: "",
+    giftIntent: "",
+    message: "",
+  });
+
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -47,7 +134,7 @@ export default function Invitation() {
   function validate() {
     const nextErrors = {};
 
-    FAMILY_FORM_FIELDS.forEach((field) => {
+    INVITATION_FORM_FIELDS.forEach((field) => {
       if (
         field.required &&
         !String(formData[field.name] || "").trim()
@@ -68,7 +155,11 @@ export default function Invitation() {
 
     setSubmitting(true);
 
-    const result = await submitLead(formData);
+    const result = await submitLead({
+      ...formData,
+      source: "section-06b-invitation",
+      track: "family",
+    });
 
     setSubmitting(false);
 
@@ -77,46 +168,23 @@ export default function Invitation() {
     }
   }
 
-  const highlights = [
-    {
-      icon: Heart,
-      title: "Made for Everyday Wear",
-      text: "Elegant jewellery children will love wearing every day.",
-    },
-    {
-      icon: Gift,
-      title: "A Meaningful Gift",
-      text: "Perfect for birthdays, milestones, and treasured family moments.",
-    },
-    {
-      icon: Sparkles,
-      title: "Beautiful Meets Smart",
-      text: "Premium craftsmanship with discreet GPS protection inside.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Peace of Mind",
-      text: "Stay connected with the people who matter most.",
-    },
-  ];
-
   return (
     <SectionWrapper id="invitation">
       <motion.div
         variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
+        initial="initial"
+        whileInView="whileInView"
         viewport={{ once: true, amount: 0.2 }}
         className="grid gap-20 lg:grid-cols-[1fr_520px]"
       >
         {/* LEFT COLUMN */}
 
         <motion.div variants={fadeUp}>
-          <p className="font-mono uppercase tracking-[0.35em] text-accent text-sm">
+          <p className="font-mono text-sm uppercase tracking-[0.35em] text-accent">
             {copy.eyebrow}
           </p>
 
-          <h2 className="mt-5 font-display text-5xl md:text-6xl text-ink leading-tight">
+          <h2 className="mt-5 font-display text-5xl leading-tight text-ink md:text-6xl">
             {copy.headline}
           </h2>
 
@@ -125,7 +193,28 @@ export default function Invitation() {
           </p>
 
           <div className="mt-14 space-y-8">
-            {highlights.map((item) => {
+            {[
+              {
+                icon: Sparkles,
+                title: "Made To Feel Special",
+                text: "A safety wearable shaped like jewellery, so children feel proud to wear it every day.",
+              },
+              {
+                icon: Gift,
+                title: "A Meaningful Gift",
+                text: "A thoughtful way for grandparents and family members to give something protective and personal.",
+              },
+              {
+                icon: HeartHandshake,
+                title: "For Family Peace Of Mind",
+                text: "Designed to support parents and caregivers without making the child feel monitored.",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Protection With Warmth",
+                text: "Reliable location features wrapped in a softer, more emotionally familiar form.",
+              },
+            ].map((item) => {
               const Icon = item.icon;
 
               return (
@@ -160,12 +249,12 @@ export default function Invitation() {
 
         <motion.div
           variants={fadeUp}
-          className="rounded-[36px] border border-gold/20 bg-white/70 p-10 backdrop-blur-xl shadow-xl"
+          className="rounded-[36px] border border-gold/20 bg-white/75 p-10 shadow-xl backdrop-blur-xl"
         >
           {submitted ? (
             <div className="flex min-h-[520px] flex-col items-center justify-center text-center">
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold/10">
-                <Heart
+                <Gift
                   size={40}
                   strokeWidth={2}
                   className="text-accent"
@@ -173,7 +262,7 @@ export default function Invitation() {
               </div>
 
               <h3 className="mt-8 font-display text-4xl text-ink">
-                Thank You!
+                {copy.successTitle}
               </h3>
 
               <p className="mt-5 max-w-md leading-8 text-slate">
@@ -185,7 +274,7 @@ export default function Invitation() {
               onSubmit={handleSubmit}
               className="space-y-6"
             >
-              {FAMILY_FORM_FIELDS.map((field) => (
+              {INVITATION_FORM_FIELDS.map((field) => (
                 <FormField
                   key={field.name}
                   field={field}
@@ -220,9 +309,7 @@ export default function Invitation() {
                   disabled:opacity-70
                 "
               >
-                {submitting
-                  ? "Submitting..."
-                  : copy.submitLabel}
+                {submitting ? "Submitting..." : copy.submitLabel}
 
                 {!submitting && (
                   <ChevronRight
@@ -231,12 +318,6 @@ export default function Invitation() {
                   />
                 )}
               </button>
-
-              <p className="text-center text-sm leading-6 text-slate">
-                Looking for a meaningful gift? Grandparents love gifting
-                TrakID pendants to celebrate birthdays, milestones and
-                cherished family moments.
-              </p>
             </form>
           )}
         </motion.div>

@@ -88,7 +88,7 @@ function App() {
         {/* <Divider /> */}
         {/* <PeaceOfMind /> */}
         {/* <Divider /> */}
-         <Invitation />
+        <Invitation />
         {/* <Divider /> */}
 
         {/* --- Shared Closing --- */}
