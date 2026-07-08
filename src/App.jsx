@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TrackProvider } from './context/TrackContext';
 import Divider from './components/Divider';
 
+
 gsap.registerPlugin(ScrollTrigger);
 
 // -------------------------------------------------------------------
@@ -80,7 +81,7 @@ function App() {
         {/* <Divider /> */}
         <EngineeringCredibility />
         <Divider />
-         <InstitutionalAsk />
+        <InstitutionalAsk />
         {/* <Divider /> */}
 
         {/* --- Family Track --- */}

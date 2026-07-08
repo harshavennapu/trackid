@@ -43,7 +43,7 @@ export default function Reveal() {
   return (
     <section
       ref={sectionRef}
-      className="bg-tint-pearl"
+      className="bg-parchment"
       style={{ height: '280vh' }}
     >
       <div className="sticky top-0 h-screen flex flex-col items-center justify-center gap-8 px-6">

@@ -15,15 +15,15 @@ const slideInLeft = {
 
 export default function EngineeringCredibility() {
   return (
-    <section className="bg-ink py-24 px-6">
+    <section className="bg-parchment py-24 px-6">
       <div className="max-w-5xl mx-auto flex flex-col gap-12">
 
         {/* Eyebrow + Headline */}
         <motion.div {...fadeUp} className="flex flex-col gap-3">
-          <span className="font-mono text-xs tracking-widest uppercase text-accent">
+          <span className="font-mono text-xs tracking-widest uppercase text-accentDeep">
             {eyebrow}
           </span>
-          <h2 className="font-display text-4xl md:text-5xl text-parchment leading-tight">
+          <h2 className="font-display text-4xl md:text-5xl text-ink leading-tight">
             {headline}
           </h2>
           <div className="w-12 h-px bg-accent mt-2" />
@@ -70,13 +70,13 @@ export default function EngineeringCredibility() {
         </motion.div>
 
         {/* Divider */}
-        <div className="divider-teardrop text-accent">
+        <div className="divider-teardrop text-accentDeep">
           <span className="bullet" />
         </div>
 
         {/* Spec grid */}
         <motion.div {...fadeUp} className="flex flex-col gap-6">
-          <span className="font-mono text-xs tracking-widest uppercase text-accent">
+          <span className="font-mono text-xs tracking-widest uppercase text-accentDeep">
             Technical Specifications
           </span>
           <SpecGrid specs={specs} />
