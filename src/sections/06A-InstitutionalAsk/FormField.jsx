@@ -1,4 +1,7 @@
 import clsx from "clsx";
+import { ChevronDown } from "lucide-react";
+
+const CONTROL_HEIGHT = 54;
 
 export default function FormField({
   field,
@@ -7,7 +10,7 @@ export default function FormField({
   onChange,
 }) {
   const baseClasses = clsx(
-    "w-full rounded-2xl border bg-white/80 px-5 py-4",
+    "w-full rounded-2xl border bg-white/80",
     "text-ink placeholder:text-slate/60",
     "transition-all duration-300",
     "focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold",
@@ -15,6 +18,21 @@ export default function FormField({
       ? "border-red-400"
       : "border-gold/20 hover:border-gold/40"
   );
+
+  // Inline styles, not classes, for the height/padding: native <select>
+  // elements carry browser default vertical padding that can silently
+  // out-rank Tailwind utility classes (no !important), which is why the
+  // select box was rendering taller than the input boxes. Setting these
+  // as inline styles with explicit border-box sizing guarantees both
+  // controls resolve to the exact same pixel height.
+  const controlStyle = {
+    height: CONTROL_HEIGHT,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingLeft: 20,
+    paddingRight: 20,
+    boxSizing: "border-box",
+  };
 
   return (
     <div className="space-y-2">
@@ -35,35 +53,45 @@ export default function FormField({
         <textarea
           id={field.name}
           name={field.name}
-          rows={5}
+          rows={2}
           value={value || ""}
           onChange={onChange}
           placeholder={field.placeholder}
-          className={baseClasses}
+          style={{ height: CONTROL_HEIGHT, padding: "14px 20px", boxSizing: "border-box" }}
+          className={clsx(baseClasses, "leading-normal resize-none")}
         />
       ) : field.type === "select" ? (
-        /* SELECT */
-
-        <select
-          id={field.name}
-          name={field.name}
-          value={value || ""}
-          onChange={onChange}
-          className={baseClasses}
-        >
-          <option value="">
-            Select an option
-          </option>
-
-          {field.options.map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
+        /* SELECT — appearance-none strips native OS styling, custom
+           chevron replaces the native arrow; height/padding forced via
+           inline style so it matches the input boxes exactly. */
+        <div className="relative">
+          <select
+            id={field.name}
+            name={field.name}
+            value={value || ""}
+            onChange={onChange}
+            style={{ ...controlStyle, paddingRight: 44 }}
+            className={clsx(baseClasses, "appearance-none")}
+          >
+            <option value="">
+              Select an option
             </option>
-          ))}
-        </select>
+
+            {field.options.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={18}
+            strokeWidth={2}
+            className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-slate/60"
+          />
+        </div>
       ) : (
         /* INPUT */
 
@@ -74,6 +102,7 @@ export default function FormField({
           value={value || ""}
           onChange={onChange}
           placeholder={field.placeholder}
+          style={controlStyle}
           className={baseClasses}
         />
       )}
