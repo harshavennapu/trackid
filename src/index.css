@@ -1,10 +1,6 @@
-/* stylelint-disable at-rule-no-unknown */
 @tailwind base;
 @tailwind components;
-/* stylelint-disable at-rule-no-unknown */
 @tailwind utilities;
-/* stylelint-enable at-rule-no-unknown */
-/* stylelint-enable at-rule-no-unknown */
 
 /* ==========================================================
    TRAKID GLOBAL STYLES
@@ -23,12 +19,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    currentColor,
-    transparent
-  );
+  background: linear-gradient(to right, transparent, currentColor, transparent);
   opacity: 0.35;
 }
 
@@ -41,7 +32,6 @@
   opacity: 0.6;
   flex-shrink: 0;
 }
-
 
 /* Hero Pendant */
 
@@ -118,7 +108,8 @@
 .connector-dot,
 .annotation {
   backface-visibility: hidden;
-  transform-style: preserve-3d;}
+  transform-style: preserve-3d;
+}
 /* Reduced motion respect — CSS-level safety net.
    JS-level checks via useReducedMotion() are the primary mechanism,
    but this catches any raw CSS animations that slip through. */
