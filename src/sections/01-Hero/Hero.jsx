@@ -146,10 +146,8 @@ export default function Hero() {
         )}
 
         {/* HTML UI OVERLAYS */}
-        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-between py-12 md:py-16">
-          <div className="w-full px-6 flex justify-end pointer-events-auto">
-            <SoundToggle />
-          </div>
+        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center gap-8 py-12 md:py-16">
+          <div />
 
           <div className="flex flex-col items-center text-center">
             <h1
