@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BadgeCheck, ArrowUpRight, RotateCw } from "lucide-react";
+import { Plus, BadgeCheck, RotateCw } from "lucide-react";
 
 import { ASSETS } from "../../content/assets";
 import { EASE, fadeUp } from "../../motion/variants";
@@ -12,7 +12,7 @@ function BrandDots() {
   return (
     <div className="flex items-center gap-1.5">
       <span className="h-2 w-2 rounded-full bg-gold" />
-      <span className="h-2 w-2 rounded-full bg-accentDeep" />
+      <span className="h-2 w-2 rounded-full bg-ink/60" />
       <span className="h-2 w-2 rounded-full bg-safe" />
     </div>
   );
@@ -35,51 +35,43 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
     setIsHovering(false);
   }
 
-  // Alternate sides card-to-card: odd pieces show the image on the left,
-  // even pieces show it on the right — order controls grid placement,
-  // not just visual position, so this actually swaps which track each
-  // panel lands in at the lg breakpoint.
-  const imageOnLeft = index % 2 === 1;
-  const textOrderClass = imageOnLeft ? "lg:order-2" : "lg:order-1";
-  const imageOrderClass = imageOnLeft ? "lg:order-1" : "lg:order-2";
+  // Alternates the layout left-to-right on desktop based on the card's index
+  const textOrderClass = index % 2 === 0 ? "lg:order-2" : "lg:order-1";
+  const imageOrderClass = index % 2 === 0 ? "lg:order-1" : "lg:order-2";
 
   return (
     <motion.article
       ref={cardRef}
       {...fadeUp}
-      onMouseLeave={handleMouseLeave}
-      whileHover={shouldReduceMotion ? undefined : { y: -8 }}
+      whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.015 }}
       transition={{ duration: 0.35, ease: EASE }}
       className="
         group
         relative
-        grid
+        flex
         h-full
-        grid-cols-1
+        flex-col
         overflow-hidden
         rounded-[32px]
         border
         border-gold/20
-        bg-white/70
-        backdrop-blur
-        p-6
+        bg-stone/90
         shadow-sm
-        backdrop-blur
         transition-[border-color,box-shadow]
         duration-300
         hover:border-gold/50
         hover:shadow-2xl
-        lg:grid-cols-2
+        lg:flex-row
       "
     >
       {/* ============================================================
                 TEXT PANEL — name, tags, description, CTA
       ============================================================ */}
-      <div className={`relative z-10 order-2 flex flex-col justify-between gap-10 p-8 ${textOrderClass} lg:p-14`}>
+      <div className={`relative z-10 flex w-full flex-col justify-between gap-10 p-8 lg:w-1/2 lg:p-14 ${textOrderClass}`}>
         <div>
           <div className="flex items-center justify-between">
             <BrandDots />
-            <span className="font-mono text-sm uppercase tracking-[0.3em] text-accentDeep/70">
+            <span className="font-mono text-sm uppercase tracking-[0.3em] text-slate">
               {String(index).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -90,7 +82,7 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
             whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1], delay: 0.15 }}
-            className="mt-7 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-parchment/90 px-3.5 py-2"
+            className="mt-7 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-white/10 px-3.5 py-2"
           >
             <BadgeCheck size={14} strokeWidth={2} className="text-accent" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
@@ -98,16 +90,15 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
             </span>
           </motion.div>
 
-          <h3 className="mt-8 font-display text-5xl font-semibold leading-[1.02] tracking-tight text-stone lg:text-6xl xl:text-[4rem]">
+          <h3 className="mt-8 font-display text-5xl font-semibold leading-[1.02] tracking-tight text-ink lg:text-6xl xl:text-[4rem]">
             {item.name}
           </h3>
 
           <p className="mt-5 max-w-lg text-lg leading-8 text-slate">{item.description}</p>
 
-          {/* Full motif list — each piece's title AND its description,
-              not just a condensed one-line tag row. */}
+          {/* Full motif list */}
           <div className="mt-8 space-y-5">
-            {item.motifNotes.map((note, noteIndex) => (
+            {(item.motifNotes || []).map((note, noteIndex) => (
               <motion.div
                 key={note.title}
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
@@ -118,7 +109,7 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
               >
                 <div className="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-gold transition-transform duration-300 group-hover:scale-125" />
                 <div>
-                  <p className="font-display text-lg font-medium tracking-tight text-stone">
+                  <p className="font-display text-lg font-medium tracking-tight text-ink">
                     {note.title}
                   </p>
                   <p className="mt-1 text-base leading-7 text-slate">{note.description}</p>
@@ -128,83 +119,57 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
           </div>
         </div>
 
-        <div>
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-          <div className="mt-8 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              className="flex items-center gap-3 text-left"
-            >
-              <span className="font-mono text-sm uppercase tracking-[0.3em] text-accentDeep">
-                {expanded ? "Hide specs" : "Tech specs"}
-              </span>
-              <motion.span
-                animate={{ rotate: expanded ? 45 : 0 }}
-                transition={{ duration: 0.25, ease: EASE }}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-gold/30"
-              >
-                <Plus size={14} strokeWidth={2} className="text-accentDeep" />
-              </motion.span>
-            </button>
-
-            <motion.button
-              type="button"
-              onClick={() => setShowBack((v) => !v)}
-              whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
-              whileTap={{ scale: 0.94 }}
-              aria-label="Flip pendant"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold text-parchment shadow-sm"
-            >
-              <ArrowUpRight size={20} strokeWidth={2} />
-            </motion.button>
-          </div>
-
-          <motion.div
-            initial={false}
-            animate={{
-              height: expanded ? "auto" : 0,
-              opacity: expanded ? 1 : 0,
-            }}
-            transition={{ duration: 0.35, ease: EASE }}
-            className="overflow-hidden"
+        {/* Tech Specs Accordion */}
+        <div className="mt-8 border-t border-gold/20 pt-6">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="flex items-center gap-3 text-left w-full justify-between lg:justify-start"
           >
-            <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-wider text-slate">
-              {(item.specs || []).map((spec, i) => (
-                <motion.div
-                  key={spec.label}
-                  initial={false}
-                  animate={
-                    expanded
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: shouldReduceMotion ? 0 : 6 }
-                  }
-                  transition={{ duration: 0.3, ease: EASE, delay: expanded ? i * 0.05 : 0 }}
-                  className="flex flex-col gap-1"
-                >
-                  <dt className="text-accentDeep/70">{spec.label}</dt>
-                  <dd className="text-stone normal-case tracking-normal text-sm font-body">
-                    {spec.value}
-                  </dd>
-                </motion.div>
-              ))}
-            </dl>
-          </motion.div>
+            <span className="font-mono text-sm uppercase tracking-[0.3em] text-gold">
+              {expanded ? "Hide specs" : "Tech specs"}
+            </span>
+            <motion.span
+              animate={{ rotate: expanded ? 45 : 0 }}
+              transition={{ duration: 0.25, ease: EASE }}
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-gold/30"
+            >
+              <Plus size={14} strokeWidth={2} className="text-gold" />
+            </motion.span>
+          </button>
+
+          <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-wider text-slate">
+            {(item.specs || []).map((spec, i) => (
+              <motion.div
+                key={spec.label}
+                initial={false}
+                animate={
+                  expanded
+                    ? { opacity: 1, y: 0, height: "auto" }
+                    : { opacity: 0, y: shouldReduceMotion ? 0 : 6, height: 0, overflow: "hidden" }
+                }
+                transition={{ duration: 0.3, ease: EASE, delay: expanded ? i * 0.05 : 0 }}
+                className="flex flex-col gap-1"
+              >
+                <dt className="text-slate">{spec.label}</dt>
+                <dd className="text-ink normal-case tracking-normal text-sm font-body">
+                  {spec.value}
+                </dd>
+              </motion.div>
+            ))}
+          </dl>
         </div>
       </div>
 
       {/* ============================================================
-                IMAGE PANEL — the piece fills its own showcase space,
-                mirroring a framed product shot rather than floating
-                in a corner of a mostly-empty card.
+                IMAGE PANEL — framed product shot, interactive
       ============================================================ */}
       <div
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={handleMouseLeave}
-        className={`relative order-1 h-[420px] overflow-hidden bg-parchment ${imageOrderClass} lg:h-full`}
+        className={`relative flex h-[420px] w-full items-center justify-center overflow-hidden bg-parchment lg:h-auto lg:w-1/2 ${imageOrderClass}`}
       >
-        {/* Ambient glow behind the piece — kept subtle so the panel still reads as void-black */}
+        {/* Ambient glow behind the piece */}
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/15 blur-3xl" />
 
         {/* Rotating bezel ring */}
@@ -240,173 +205,88 @@ export default function PendantCard({ item, index = 1, total = 4 }) {
           />
         )}
 
-      <div className="relative flex justify-center overflow-hidden py-2 mb-2" style={{ transformStyle: "preserve-3d" }}>
-        <button
-          type="button"
-          onClick={() => setShowBack((v) => !v)}
-          className="relative z-10 [perspective:1000px]"
-          aria-label={showBack ? "Show front of pendant" : "Show back of pendant"}
-        >
-          <div className="h-px w-8 bg-gold/50" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
-            {item.motifNotes[0].title}
-          </span>
-        </motion.div>
+        {/* Top-left annotation */}
+        {item.motifNotes && item.motifNotes.length > 0 && (
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="absolute left-6 top-6 z-30 flex items-center gap-3"
+          >
+            <div className="h-px w-8 bg-gold/50" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
+              {item.motifNotes[0].title}
+            </span>
+          </motion.div>
+        )}
 
         {/* Bottom-right annotation */}
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, x: 10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: EASE }}
-          className="absolute bottom-6 right-6 z-30 flex items-center gap-3"
-        >
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
-            {item.motifNotes[1].title}
-          </span>
-          <div className="h-px w-8 bg-gold/50" />
-        </motion.div>
-
-        {/* The pendant itself — fills almost the entire showcase, leaving
-            only a thin border of black at the panel's edges */}
-        <div className="relative flex h-full w-full items-center justify-center p-6 [perspective:1200px] lg:p-10">
+        {item.motifNotes && item.motifNotes.length > 1 && (
           <motion.div
-            animate={{ rotateY: showBack ? 180 : 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{
-  width: 220,
-  height: 220,
-}}
-className="relative overflow-hidden rounded-3xl lg:!h-[240px] lg:!w-[240px]"
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="absolute bottom-6 right-6 z-30 flex items-center gap-3"
           >
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink/70">
+              {item.motifNotes[1].title}
+            </span>
+            <div className="h-px w-8 bg-gold/50" />
+          </motion.div>
+        )}
+
+        {/* 
+            The pendant itself — fills almost the entire showcase.
+            Uses a cross-fade to cleanly flip front-to-back, avoiding WebKit 3D nesting bugs. 
+        */}
+        <div className="relative flex h-full w-full items-center justify-center p-6 lg:p-10">
+          <div className="relative h-full w-full">
             <motion.img
               src={image}
               alt={item.name}
-              animate={
-                shouldReduceMotion
-                  ? undefined
-                  : { y: [-4, 4, -4], rotate: [-1.5, 1.5, -1.5] }
-              }
-              transition={{ duration: 6, repeat: Infinity, ease: EASE }}
-              style={{ backfaceVisibility: "hidden", objectFit: "contain" }}
+              animate={{
+                opacity: showBack ? 0 : 1,
+                ...(shouldReduceMotion ? {} : { y: [-4, 4, -4], rotate: [-1.5, 1.5, -1.5] }),
+              }}
+              transition={{
+                opacity: { duration: 0.4, ease: EASE },
+                y: { duration: 6, repeat: Infinity, ease: EASE },
+                rotate: { duration: 6, repeat: Infinity, ease: EASE },
+              }}
+              style={{ objectFit: "contain" }}
               className="absolute inset-0 h-full w-full drop-shadow-[0_18px_34px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-105"
             />
-            <img
+            <motion.img
               src={backImage}
               alt={`${item.name} — reverse`}
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-                objectFit: "contain",
-              }}
+              animate={{ opacity: showBack ? 1 : 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              style={{ objectFit: "contain" }}
               className="absolute inset-0 h-full w-full drop-shadow-[0_18px_34px_rgba(0,0,0,0.45)]"
             />
-          </motion.div>
-
-        {/* Bottom Annotation */}
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, x: 10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: EASE }}
-          className="absolute right-0 bottom-6 text-right"
-        >
-          <div className="flex items-center justify-end gap-3">
-            <div className="h-px w-12 bg-gold/40" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
-              {item.motifNotes[1].title}
-            </span>
           </div>
-        </motion.div>
-      </div>
 
-      {/* Growable middle content — flex-1 lets this stretch so the footer
-          below always lands at the same y across cards, regardless of how
-          long each pendant's description or motif list is. */}
-      <div className="flex-1">
-        {/* Name */}
-        <h3 className="mt-2 font-display text-3xl text-ink leading-tight">
-          {item.name}
-        </h3>
-
-        {/* Description */}
-        <p className="mt-3 text-[17px] leading-7 text-slate line-clamp-2">{item.description}</p>
-
-        {/* Motifs */}
-        <div className="mt-6 space-y-2">
-          {item.motifNotes.map((note, index) => (
-            <motion.div
-              key={note.title}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: index * 0.08, ease: EASE }}
-              className="flex items-start gap-4"
+          {/* Hover CTA — echoes an "open project" reveal, doubles as the flip trigger */}
+          {!shouldReduceMotion && (
+            <motion.button
+              type="button"
+              onClick={() => setShowBack((v) => !v)}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={isHovering ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3, ease: EASE }}
+              className="absolute z-40 flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-full border border-gold/40 bg-ink/10 text-ink backdrop-blur-md"
+              aria-label={showBack ? "Show front of pendant" : "Show back of pendant"}
             >
-              <div className="mt-2 h-2 w-2 rounded-full bg-gold transition-transform duration-300 group-hover:scale-125" />
-              <div>
-                <p className="font-display text-base text-ink">{note.title}</p>
-                <p className="text-sm text-slate">
-                  {note.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+              <RotateCw size={16} strokeWidth={1.8} />
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] mt-1">
+                {showBack ? "Front" : "Flip"}
+              </span>
+            </motion.button>
+          )}
         </div>
       </div>
-
-      <div className="mt-5 h-px w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      {/* Footer — now an actual disclosure trigger, not just static text */}
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
-        className="mt-3 flex w-full items-center justify-between border-t border-gold/15 pt-5 text-left"
-      >
-        <span className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
-          Craft Collection
-        </span>
-        <span className="flex items-center gap-2 font-body text-sm text-slate">
-          {expanded ? "Hide specs" : "Tech specs"}
-          <motion.span
-            animate={{ rotate: expanded ? 45 : 0 }}
-            transition={{ duration: 0.25, ease: EASE }}
-          >
-            <Plus size={14} strokeWidth={2} className="text-accent" />
-          </motion.span>
-        </span>
-      </button>
-
-      <motion.div
-        initial={false}
-        animate={{
-          height: expanded ? "auto" : 0,
-          opacity: expanded ? 1 : 0,
-        }}
-        transition={{ duration: 0.35, ease: EASE }}
-        className="overflow-hidden"
-      >
-        <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-wider text-slate">
-          {(item.specs || []).map((spec, index) => (
-            <motion.div
-              key={spec.label}
-              initial={false}
-              animate={
-                expanded
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: shouldReduceMotion ? 0 : 6 }
-              }
-              transition={{ duration: 0.3, ease: EASE, delay: expanded ? index * 0.05 : 0 }}
-              className="flex flex-col gap-1"
-            >
-              <dt className="text-accent/70">{spec.label}</dt>
-              <dd className="text-ink normal-case tracking-normal text-sm font-body">
-                {spec.value}
-              </dd>
-            </motion.div>
-          ))}
-        </dl>
-      </motion.div>
     </motion.article>
   );
 }

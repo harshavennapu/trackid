@@ -2,35 +2,62 @@ import { motion } from 'framer-motion';
 import { fadeUp } from '../../motion/variants';
 import { COPY } from '../../content/copy';
 import * as Icons from 'lucide-react';
-import Divider from '../../components/Divider';
 
-const { brandStatement, tagline, footerColumns, socialLinks, copyright } = COPY.closing;
+const { brandStatement, footerColumns, socialLinks, copyright } = COPY.closing;
+
+// Kept from the original copy so no content is lost — just re-labeled to match
+// the "Register" column in the reference design.
+const registerLinks = [
+  { label: 'Sign Up', href: '#' },
+  { label: 'Login', href: '#' },
+  { label: 'Forgot Password', href: '#' },
+];
 
 export default function Closing() {
+  const pagesCol = footerColumns.find((c) => c.heading === 'Product') || footerColumns[0];
+  const legalCol = footerColumns.find((c) => c.heading === 'Legal') || footerColumns[2];
+  const companyCol = footerColumns.find((c) => c.heading === 'Company');
+
   return (
-    <section className="bg-parchment pt-24 pb-12 px-6">
-      <div className="max-w-5xl mx-auto flex flex-col gap-16">
+    <section className="relative bg-parchment pt-32 pb-16 px-8 md:px-12 overflow-hidden">
+      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="flex flex-col gap-24">
 
-        <motion.div {...fadeUp} className="flex flex-col gap-4 items-center text-center">
-          <h2 className="font-display text-5xl md:text-7xl text-ink">
-            {brandStatement}
-          </h2>
-          <p className="font-body text-base text-slate max-w-md leading-relaxed">
-            {tagline}
-          </p>
-        </motion.div>
-
-        <Divider />
-
-        <motion.div {...fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-8">
-
-          {footerColumns.map((col) => (
-            <div key={col.heading} className="flex flex-col gap-4">
-              <span className="font-mono text-xs uppercase tracking-widest text-accentDeep">
-                {col.heading}
+        <motion.div
+          {...fadeUp}
+          className="flex flex-col md:flex-row md:items-start md:justify-between gap-16"
+        >
+          {/* Brand block */}
+          <div className="flex flex-col gap-4 max-w-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-ink flex items-center justify-center shrink-0">
+                <span className="font-display font-bold text-sm text-parchment">
+                  {brandStatement.charAt(0)}
+                </span>
+              </div>
+              <span className="font-display font-bold text-lg text-ink tracking-tight">
+                {brandStatement}
               </span>
-              <ul className="flex flex-col gap-2">
-                {col.links.map((link) => (
+            </div>
+            <p className="font-body text-xs text-slate">
+              {copyright}
+            </p>
+          </div>
+
+          {/* Link columns */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-14 gap-y-14">
+
+            <div className="flex flex-col gap-5">
+              <span className="font-display font-semibold text-sm text-ink">
+                Pages
+              </span>
+              <ul className="flex flex-col gap-4">
+                <li>
+                  <a href="#" className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
+                    All Products
+                  </a>
+                </li>
+                {pagesCol.links.map((link) => (
                   <li key={link.label}>
                     <a href={link.href} className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
                       {link.label}
@@ -39,50 +66,85 @@ export default function Closing() {
                 ))}
               </ul>
             </div>
-          ))}
 
-          <div className="flex flex-col gap-4">
-            <span className="font-mono text-xs uppercase tracking-widest text-accentDeep">
-              
-            </span>
-            <ul className="flex flex-col gap-2">
-              <li>
-                <a href="#" className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
-                  Track your device
-                </a>
-              </li>
-              <li>
-                <a href="#" className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
-                  Share your location
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <span className="font-mono text-xs uppercase tracking-widest text-accentDeep">
-              Follow
-            </span>
-            <ul className="flex flex-col gap-2">
-              {socialLinks.map((s) => {
-                const LucideIcon = Icons[s.icon];
-                return (
-                  <li key={s.label}>
-                    <a href={s.href} className="inline-flex items-center gap-2 font-body text-sm text-slate hover:text-ink transition-colors duration-200">
-                      {LucideIcon && <LucideIcon size={14} />}
-                      {s.label}
+            <div className="flex flex-col gap-5">
+              <span className="font-display font-semibold text-sm text-ink">
+                Company
+              </span>
+              <ul className="flex flex-col gap-4">
+                {companyCol?.links.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
+                      {link.label}
                     </a>
                   </li>
-                );
-              })}
-            </ul>
-          </div>
+                ))}
+              </ul>
+            </div>
 
+            <div className="flex flex-col gap-5">
+              <span className="font-display font-semibold text-sm text-ink">
+                Socials
+              </span>
+              <ul className="flex flex-col gap-4">
+                {socialLinks.map((s) => {
+                  const LucideIcon = Icons[s.icon];
+                  return (
+                    <li key={s.label}>
+                      <a href={s.href} className="inline-flex items-center gap-2 font-body text-sm text-slate hover:text-ink transition-colors duration-200">
+                        {LucideIcon && <LucideIcon size={16} />}
+                        {s.label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <span className="font-display font-semibold text-sm text-ink">
+                Legal
+              </span>
+              <ul className="flex flex-col gap-4">
+                {legalCol.links.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <span className="font-display font-semibold text-sm text-ink">
+                Register
+              </span>
+              <ul className="flex flex-col gap-4">
+                {registerLinks.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="font-body text-sm text-slate hover:text-ink transition-colors duration-200">
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
         </motion.div>
 
-        <p className="font-mono text-xs text-slate/60 text-center border-t border-stone pt-8">
-          {copyright}
-        </p>
+      </div>
+
+      {/* Giant watermark brand name */}
+      <div className="relative w-full mt-6 pointer-events-none select-none overflow-hidden leading-none">
+        <span
+          className="block w-full text-center font-display font-bold text-ink/[0.06] leading-none"
+          style={{ fontSize: 'clamp(4rem, 17vw, 15rem)', transform: 'translateY(8%)' }}
+        >
+          {brandStatement.toUpperCase()}
+        </span>
+      </div>
 
       </div>
     </section>
